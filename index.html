@@ -1,1413 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>اسأل وكيلك</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
-
-    body {
-      font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #e9ecef;
-      color: #343a40;
-    }
-
-    header {
-      background-color: #0077b6;
-      color: white;
-      padding: 25px;
-      text-align: center;
-      font-size: 32px;
-      font-weight: bold;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 40px auto 100px;
-      padding: 30px;
-      border-radius: 12px;
-      background: #ffffff;
-      box-shadow: 0 0 20px rgba(0,0,0,0.08);
-      position: relative; /* لتموضع العناصر بداخله */
-    }
-
-    /* أنماط القائمة السفلية */
-    .bottom-nav {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 60px;
-      background-color: #0077b6;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-      z-index: 1000;
-    }
-
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-decoration: none;
-      color: white;
-      font-size: 12px;
-      font-weight: bold;
-      transition: color 0.3s ease;
-    }
-
-    .nav-item .nav-text {
-      margin-top: 4px;
-    }
-
-    .nav-item i {
-      font-size: 20px;
-      margin-bottom: 2px;
-    }
-
-    .nav-item.active {
-      color: #00b4d8;
-    }
-    
-    /* FAQ Box Styles */
-    .faq-box {
-      background: #f8f9fa;
-      border-radius: 12px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.4s ease-in-out;
-      margin-bottom: 25px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
-
-    .faq-box:hover {
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-    }
-
-    .faq-question {
-      background: #ffffff;
-      color: #0077b6;
-      padding: 25px;
-      font-size: 20px;
-      font-weight: bold;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid #dee2e6;
-    }
-    
-    .faq-question::before {
-      content: '+';
-      font-size: 24px;
-      font-weight: 700;
-      color: #0077b6;
-      transition: transform 0.3s ease;
-      margin-left: 15px;
-    }
-
-    .faq-box.open .faq-question::before {
-      content: '-';
-      transform: rotate(180deg);
-    }
-
-    .faq-answer {
-      display: none;
-      padding: 25px;
-      background: #f8f9fa;
-      animation: fadeIn 0.5s ease-in-out;
-      line-height: 1.8;
-      border-top: 1px solid #e9ecef;
-    }
-
-    .faq-answer p, .faq-answer h4 {
-      margin-top: 0;
-    }
-
-    .faq-answer h4 {
-      color: #0077b6;
-      font-size: 18px;
-      border-bottom: 2px solid #00b4d8;
-      padding-bottom: 5px;
-      margin-bottom: 15px;
-    }
-
-    .faq-answer ul, .faq-answer ol {
-      padding-right: 25px;
-      margin-top: 0;
-      margin-bottom: 15px;
-    }
-
-    .faq-answer li {
-      margin-bottom: 12px;
-    }
-    
-    .faq-answer a {
-      display: inline-block;
-      margin-top: 15px;
-      background-color: #00b4d8;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
-    }
-    
-    .faq-answer a:hover {
-      background-color: #008fa3;
-    }
-
-    .faq-box.open .faq-answer {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from {opacity: 0; transform: translateY(-10px);}
-      to {opacity: 1; transform: translateY(0);}
-    }
-
-    /* Agent Card Styles */
-    .agent-card {
-      background: #f8f9fa;
-      border-radius: 12px;
-      padding: 25px;
-      margin-bottom: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-      text-align: center;
-    }
-    
-    .agent-card h3 {
-      color: #0077b6;
-      font-size: 24px;
-      border-bottom: 2px solid #00b4d8;
-      padding-bottom: 10px;
-      margin-bottom: 15px;
-    }
-    
-    .agent-card p {
-      font-size: 18px;
-      margin: 10px 0;
-    }
-
-    .contact-btn {
-      display: inline-block;
-      margin-top: 20px;
-      background-color: #00b4d8;
-      color: white;
-      padding: 12px 25px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: bold;
-      border: none;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
-
-    .contact-btn:hover {
-      background-color: #008fa3;
-    }
-
-    /* Modal (Form) Styles */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 10;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.4);
-      padding-top: 60px;
-    }
-    
-    #agentModal .modal-content {
-      background-color: #fff;
-      border: 2px solid #00b4d8;
-      border-radius: 15px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    }
-
-    .modal-content {
-      margin: 5% auto;
-      padding: 20px;
-      width: 80%;
-      max-width: 500px;
-      border-radius: 12px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    }
-    
-    .close-btn {
-      color: #aaa;
-      float: left;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    
-    .close-btn:hover,
-    .close-btn:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-    }
-    
-    .contact-form input,
-    .contact-form textarea,
-    .agent-form input,
-    .agent-form textarea { /* إضافة textarea هنا */
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-sizing: border-box;
-      font-family: 'Cairo', sans-serif;
-    }
-    
-    .contact-form button,
-    .agent-form button {
-      width: 100%;
-      background-color: #0077b6;
-      color: white;
-      padding: 14px 20px;
-      margin: 8px 0;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      font-weight: bold;
-      transition: background-color 0.3s ease;
-    }
-    
-    .contact-form button:hover,
-    .agent-form button:hover {
-      background-color: #005f90;
-    }
-
-    .content-section {
-      display: none;
-    }
-    
-    .agent-form-header {
-        text-align: center;
-        color: #0077b6;
-        font-size: 24px;
-        margin-bottom: 20px;
-    }
-    
-    .agent-form-description {
-        text-align: center;
-        color: #555;
-        margin-bottom: 25px;
-    }
-    
-    .agent-apply-btn {
-        display: inline-block;
-        margin-top: 15px; 
-        background-color: #005f90;
-        color: white;
-        padding: 12px 25px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: bold;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-    
-    .agent-apply-btn:hover {
-        background-color: #00456b;
-    }
-    
-    .agent-form-note {
-        text-align: center;
-        color: #888;
-        font-size: 14px;
-        margin-top: 20px;
-    }
-
-    /* New: Nearest Agent Button */
-    .nearest-agent-btn {
-        display: inline-block;
-        margin-top: 15px; 
-        background-color: #00b4d8;
-        color: white;
-        padding: 12px 25px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: bold;
-        border: none;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        font-size: 16px;
-        margin-left: 10px; /* لإعطاء مسافة بين الزرين */
-    }
-
-    .nearest-agent-btn:hover {
-        background-color: #008fa3; /* لون عند التحويم */
-    }
-    
-    /* NEW: Message Modal Styles (replaces successModal and handles errors) */
-    #messageModal .modal-content {
-      background-color: #e9f5f9; /* Default for success */
-      border: 2px solid #00b4d8;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px;
-      animation: bounceIn 0.6s ease-in-out;
-    }
-
-    #messageModal.error .modal-content {
-        background-color: #ffebe6; /* Light red for error */
-        border-color: #dc3545; /* Red border for error */
-    }
-    
-    #messageModal .modal-icon {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      display: block;
-      stroke-width: 4;
-      stroke: #00b4d8; /* Default for success */
-      stroke-miterlimit: 10;
-      margin: 0 auto 20px;
-      box-shadow: inset 0px 0px 0px #00b4d8;
-      animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
-    }
-
-    #messageModal.error .modal-icon {
-        stroke: #dc3545; /* Red for error icon */
-        box-shadow: inset 0px 0px 0px #dc3545;
-    }
-
-    #messageModal .checkmark__circle, #messageModal .error__circle {
-      stroke-dasharray: 166;
-      stroke-dashoffset: 166;
-      stroke-width: 4;
-      stroke-miterlimit: 10;
-      fill: none;
-      animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-    }
-    
-    #messageModal .checkmark__circle {
-        stroke: #00b4d8; /* Green for success */
-    }
-
-    #messageModal .checkmark__check {
-      transform-origin: 50% 50%;
-      stroke-dasharray: 48;
-      stroke-dashoffset: 48;
-      stroke-width: 4;
-      stroke: #fff;
-      animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
-    }
-
-    #messageModal .error__line {
-        stroke: #dc3545;
-        stroke-dasharray: 24;
-        stroke-dashoffset: 24;
-        animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
-    }
-    
-    @keyframes stroke {
-      100% {
-        stroke-dashoffset: 0;
-      }
-    }
-
-    @keyframes fill {
-      100% {
-        box-shadow: inset 0px 0px 0px 50px var(--modal-fill-color, #00b4d8); /* Dynamic fill color */
-      }
-    }
-    
-    @keyframes scale {
-      0%, 100% {
-        transform: none;
-      }
-      50% {
-        transform: scale3d(1.1, 1.1, 1);
-      }
-    }
-
-    @keyframes bounceIn {
-      0% {
-        transform: scale(0.3);
-        opacity: 0;
-      }
-      50% {
-        transform: scale(1.1);
-        opacity: 1;
-      }
-      70% {
-        transform: scale(0.9);
-      }
-      100% {
-        transform: scale(1);
-      }
-    }
-    
-    /* New Agent Detail Page Style */
-    .agent-detail-page {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #e9ecef;
-      z-index: 999;
-      padding-top: 60px;
-      overflow-y: auto;
-      animation: slideInFromTop 0.5s forwards;
-    }
-    
-    .agent-detail-card {
-      background: #ffffff;
-      max-width: 700px;
-      margin: 40px auto;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    }
-    
-    .agent-detail-card h3 {
-      font-size: 28px;
-      color: #0077b6;
-      border-bottom: 2px solid #00b4d8;
-      padding-bottom: 10px;
-    }
-    
-    .agent-detail-card p {
-      font-size: 16px;
-      line-height: 1.8;
-    }
-    
-    .agent-contact-buttons {
-      display: flex;
-      justify-content: space-around;
-      margin-top: 30px;
-    }
-    
-    .agent-contact-buttons a {
-        flex: 1;
-        margin: 0 5px;
-        text-align: center;
-        background-color: #0077b6;
-        color: white;
-        padding: 15px;
-        border-radius: 8px;
-        text-decoration: none;
-        font-weight: bold;
-        transition: background-color 0.3s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .agent-contact-buttons a.phone-btn { background-color: #28a745; }
-    .agent-contact-buttons a.map-btn { background-color: #dc3545; }
-    
-    .agent-contact-buttons a i {
-        margin-left: 10px;
-    }
-    
-    @keyframes slideInFromTop {
-        from { transform: translateY(-100%); }
-        to { transform: translateY(0); }
-    }
-    
-    .close-detail-btn {
-        position: absolute;
-        top: 20px;
-        right: 20px;
-        font-size: 30px;
-        cursor: pointer;
-        color: #555;
-    }
-    
-    /* Table styles for FAQ and Agent services */
-    .faq-answer table, .agent-detail-card table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 15px;
-      font-size: 16px;
-    }
-
-    .faq-answer th, .faq-answer td, .agent-detail-card th, .agent-detail-card td {
-      border: 1px solid #dee2e6;
-      padding: 12px;
-      text-align: right;
-    }
-
-    .faq-answer th, .agent-detail-card th {
-      background-color: #0077b6;
-      color: white;
-      font-weight: bold;
-    }
-
-    .faq-answer tr:nth-child(even), .agent-detail-card tr:nth-child(even) {
-      background-color: #f2f2f2;
-    }
-
-    .faq-answer tr:hover, .agent-detail-card tr:hover {
-      background-color: #e9e9e9;
-    }
-
-    /* Print specific styles for the table */
-    @media print {
-      body {
-        margin: 0;
-        padding: 0;
-        background: #fff;
-        color: #000;
-      }
-      header, .bottom-nav, footer, .modal, .agent-detail-page {
-        display: none !important;
-      }
-      .container {
-        margin: 20px auto !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-        max-width: 100% !important;
-      }
-      .faq-box {
-        box-shadow: none !important;
-        margin-bottom: 10px !important;
-        border: 1px solid #ccc;
-      }
-      .faq-question::before, .faq-box.open .faq-question::before {
-        content: '' !important; /* Hide + / - signs */
-      }
-      .faq-answer {
-        display: block !important; /* Always show answers when printing */
-        animation: none !important;
-        padding: 15px !important;
-        border-top: none !important;
-      }
-      .faq-answer table, .faq-answer th, .faq-answer td, .agent-detail-card table, .agent-detail-card th, .agent-detail-card td {
-        border-color: #000;
-      }
-    }
-
-
-    footer {
-      text-align: center;
-      color: #6c757d;
-      padding: 25px;
-      font-size: 14px;
-      margin-right: 0;
-    }
-
-    @media (max-width: 768px) {
-      .sidebar {
-        display: none;
-      }
-      .container {
-        margin: 20px auto 80px;
-        padding: 20px;
-      }
-      header {
-        font-size: 24px;
-      }
-      footer {
-        margin-right: 0;
-      }
-      .agent-contact-buttons {
-          flex-direction: column;
-      }
-      .agent-contact-buttons a {
-          margin-bottom: 10px;
-      }
-    }
-  </style>
-  
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-</head>
-<body>
-
-<header id="main-header">
-  اسأل وكيلك
-</header>
-
-<div id="faq-page" class="container content-section">
-  
-  <h2 style="text-align: center; color: #0077b6;">الأسئلة الشائعة</h2>
-  <hr style="border: none; border-bottom: 2px solid #00b4d8; width: 50%; margin: 20px auto;">
-
-  <div class="faq-box" onclick="toggleAnswer(this)">
-    <div class="faq-question">
-      كيف أسجل على البطاقة الوقودية؟
-    </div>
-    <div class="faq-answer">
-      <p>يتم التسجيل على البطاقة الوقودية في محافظة نينوى عبر التوجه إلى أحد مكاتب وكلاء شركة تبادل المعتمدين.</p>
-      
-      <h4>📋 المستمسكات المطلوبة (أصلية حصراً):</h4>
-      <ul>
-        <li>البطاقة الموحدة</li>
-        <li>بطاقة السكن</li>
-        <li>البطاقة التموينية</li>
-        <li>سنوية المركبة</li>
-        <li>حضور صاحب المركبة الشرعي أو من يحمل وكالة قانونية</li>
-      </ul>
-      
-      <p><strong>بعد إكمال التسجيل، تستلم وصلًا يؤكد تقديم الطلب.</strong></p>
-
-      <h4>⚠️ ملاحظات مهمة:</h4>
-      <ul>
-        <li>تُقبل فقط الوكالات للمركبات التي تحمل لوحات محافظة نينوى.</li>
-        <li>كما تُقبل الوكالات لسيارات الأجرة التي تحمل لوحات المحافظات الجنوبية.</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="faq-box" onclick="toggleAnswer(this)">
-    <div class="faq-question">
-      كيف أسجل على تطبيق تبادل Verify؟
-    </div>
-    <div class="faq-answer">
-      <p>
-        لتسجيل حساب في تطبيق <strong>تبادل Verify</strong> بنجاح، يرجى اتباع الخطوات التالية وقراءة المتطلبات بعناية:
-      </p>
-      <h4>📋 المستمسكات المطلوبة:</h4>
-      <ul>
-        <li>البطاقة الوطنية الموحدة (الهوية)</li>
-        <li>بطاقة السكن</li>
-        <li>البطاقة التموينية (لأخذ رقم الدار، الزقاق، والمحلة فقط)</li>
-      </ul>
-      <h4>📝 خطوات التسجيل:</h4>
-      <ol>
-        <li><strong>إدخال رقم الهاتف:</strong><br>
-          - بدون الصفر، يبدأ بـ 770 أو 771 أو 750...<br>
-          - مكوّن من 10 أرقام فقط.
-        </li>
-        <li><strong>رفع المستمسكات:</strong><br>
-          - تصوير البطاقة الوطنية (أمامية ثم خلفية)<br>
-          - تصوير بطاقة السكن (أمامية ثم خلفية)<br>
-          - أخذ رقم الدار والزقاق والمحلة من البطاقة التموينية
-        </li>
-        <li><strong>إدخال المعلومات:</strong><br>
-          - تُملأ بعض المعلومات تلقائيًا<br>
-          - إذا لم تظهر، أدخل الاسم بالإنجليزية يدويًا<br>
-          - يمكن استخدام تطبيق "Google Translate" لترجمة الاسم
-        </li>
-        <li><strong>اختيار المهنة:</strong><br>
-          - يتم تحديدها حسب ما يُبلّغ به الزبون
-        </li>
-        <li><strong>توقيع الزبون:</strong><br>
-          - التوقيع في مربع أبيض باستخدام الإصبع أو القلم على الشاشة
-        </li>
-        <li><strong>تصوير الوجه والعين:</strong><br>
-          - تصوير الوجه الكامل أولاً<br>
-          - ثم تقريب الكاميرا لتصوير العين بدقة
-        </li>
-        <li><strong>اختيار موقع الشركة:</strong><br>
-          - يجب اختيار الشركة الرئيسية فقط (دون تحديد وكيل)
-        </li>
-      </ol>
-      <h4>⚠️ ملاحظات مهمة:</h4>
-      <ul>
-        <li>يجب أن يكون التصوير واضحًا وخالٍ من الأشخاص الآخرين.</li>
-        <li>عدم ظهور المصوّر أو أي شخص بجانب الزبون.</li>
-        <li>استخدام المستمسكات الأصلية فقط.</li>
-        <li>تأكد من وضوح الصور ودقتها قبل الإرسال.</li>
-        </ul>
-      <a href="https://play.google.com/store/apps/details?id=com.elitesoft.kyc" target="_blank">
-        تحميل تطبيق تبادل Verify
-      </a>
-    </div>
-  </div>
-
-  <div class="faq-box" onclick="toggleAnswer(this)">
-    <div class="faq-question">
-      كيفية استلام بطاقتي الوقودية؟
-    </div>
-    <div class="faq-answer">
-      <p>
-        إن عملية استلام البطاقة الوقودية تتم فقط من خلال أحد **وكلاء شركة تبادل المعتمدين**.
-        عملية سحب البطاقة لا تتم إلا عبر أحد وكلاء الشركة.
-      </p>
-    </div>
-  </div>
-
-  <div class="faq-box" onclick="toggleAnswer(this)">
-    <div class="faq-question">
-      ما فائدة تطبيقي "كوبوني" و"تبادل" لأصحاب البطاقات؟
-    </div>
-    <div class="faq-answer">
-      <p>
-        تطبيقا "كوبوني" و"تبادل" لهما فوائد عديدة، وقد تم تطويرهما لمساعدتك على معرفة وإدارة كافة تفاصيل بطاقتك الوقودية بسهولة:
-      </p>
-      
-      <h4>تطبيق كوبوني (Couponi)</h4>
-      <p>
-        تكمن فائدته الأساسية في معرفة وقت التزويد وتحديد المحطة التي يمكنك التزود منها.
-      </p>
-      
-      <h4>تطبيق تبادل (Tabadul)</h4>
-      <p>
-        يُستخدم هذا التطبيق لمعرفة المبلغ المتبقي في بطاقتك ورصيدك الحالي.
-      </p>
-      <p>
-        يمكنك ربط كل تطبيق بحسابك الخاص، إما من خلال الحساب الذي يوفره لك الوكيل، أو عبر إنشاء حساب بنفسك.
-      </p>
-      <a href="https://play.google.com/store/apps/details?id=com.tabadul.mobile" target="_blank">
-        تحميل تطبيق تبادل
-      </a>
-    </div>
-  </div>
-  
-  <div class="faq-box" onclick="toggleAnswer(this)">
-    <div class="faq-question">
-      ما هو مبلغ البطاقة الوقودية؟
-    </div>
-    <div class="faq-answer">
-      <p>
-        تختلف مبالغ إصدار البطاقة في الوقت الحالي من وكيل لآخر ومن مكتب لآخر. وعلى الرغم من أن بعض المكاتب قد تأخذ مبالغ أعلى، إلا أن السعر الحقيقي يتراوح ما بين <strong>15 إلى 20 ألف دينار عراقي</strong>.
-      </p>
-    </div>
-  </div>
-
-  <div class="faq-box" onclick="toggleAnswer(this)">
-    <div class="faq-question">
-      كيف يمكنني تعبئة رصيد البطاقة الوقودية؟
-    </div>
-    <div class="faq-answer">
-      <p>
-        تعبئة رصيد البطاقة الوقودية لا يمكن أن تتم إلا من خلال أحد **وكلاء شركة تبادل المعتمدين**.
-      </p>
-      <p>
-        يمكنك تعبئة رصيد يبدأ من **10 آلاف دينار** وحتى **10 ملايين دينار عراقي**.
-      </p>
-    </div>
-  </div>
-
-  <div class="faq-box" onclick="toggleAnswer(this)">
-    <div class="faq-question">
-      ماذا تفعل بعد استلام البطاقة الوقودية؟
-    </div>
-    <div class="faq-answer">
-      <p>
-        بعد استلام البطاقة الوقودية من أحد وكلاء شركة تبادل المعتمدين، عليك التوجه إلى إحدى اللجان التفعيل الموجودة في المحافظة. ويعد ذلك مهمًا جدًا لاستكمال الموافقة على حصة السيارة من الوقود واستكمال الموافقة النهائية.
-      </p>
-      <p>وترفع لكم المحطات التي تتواجد فيها اللجان لتفعيل البطاقة:</p>
-      <table>
-        <thead>
-          <tr>
-            <th>المحطة</th>
-            <th>العنوان</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>محطة العربي</td>
-            <td>مدخل العربي</td>
-          </tr>
-          <tr>
-            <td>محطة برج الذهبي</td>
-            <td>كوكجلي</td>
-          </tr>
-          <tr>
-            <td>محطة أرض الندى</td>
-            <td>مقابل مستشفى الحلبوسي</td>
-          </tr>
-          <tr>
-            <td>محطة أبو عبيدة</td>
-            <td>قرب الإصلاح</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-</div>
-
-<div id="agents-page" class="container content-section">
-  
-  <h2 style="text-align: center; color: #0077b6;">وكلاء شركة تبادل المعتمدون</h2>
-  <hr style="border: none; border-bottom: 2px solid #00b4d8; width: 50%; margin: 20px auto;">
-  <p>فيما يلي معلومات وكلاء شركة تبادل، يمكنك التواصل معهم مباشرةً أو إرسال استفسارك من خلال النموذج المتاح.</p>
-
-  <div style="text-align: center; margin-bottom: 30px;">
-    <button class="nearest-agent-btn" onclick="findNearestAgent()">
-        <i class="fas fa-location-arrow"></i> أقرب وكيل
-    </button>
-    <button class="agent-apply-btn" onclick="openForm('agentModal')">أنا وكيل</button>
-  </div>
-
-  <div class="agent-card">
-    <h3>مكتب ربيعة</h3>
-    <p><strong>رقم الهاتف:</strong> 07518809908</p>
-    <button class="contact-btn" onclick="openAgentDetail('rabia')">اسأل الوكيل</button>
-  </div>
-
-  <div class="agent-card">
-    <h3>مكتب محمد ال شهاب</h3>
-    <p><strong>رقم الهاتف:</strong> 07822448215</p>
-    <button class="contact-btn" onclick="openAgentDetail('mohamed-al-shehab')">اسأل الوكيل</button>
-  </div>
-
-  <div class="agent-card">
-    <h3>مكتب الذهبي للموبايلات</h3>
-    <p><strong>رقم الهاتف:</strong> 07718747888</p>
-    <button class="contact-btn" onclick="openAgentDetail('aldhahabi-mobiles')">اسأل الوكيل</button>
-  </div>
-
-  <div class="agent-card">
-    <h3>مكتب المختار</h3>
-    <p><strong>رقم الهاتف:</strong> 07510598340</p>
-    <button class="contact-btn" onclick="openAgentDetail('almokhtar')">اسأل الوكيل</button>
-  </div>
-
-  <div class="agent-card">
-    <h3>مكتب الوسام للخدمات الالكترونية</h3>
-    <p><strong>رقم الهاتف:</strong> 07510029007</p>
-    <button class="contact-btn" onclick="openAgentDetail('alwesam-services')">اسأل الوكيل</button>
-  </div>
-
-  <div class="agent-card">
-    <h3>لارسن</h3>
-    <p><strong>رقم الهاتف:</strong> 7734070266</p>
-    <button class="contact-btn" onclick="openAgentDetail('larsen')">اسأل الوكيل</button>
-  </div>
-  
-</div>
-
-<div id="rabia-detail-page" class="agent-detail-page">
-    <span class="close-detail-btn" onclick="closeAgentDetail('rabia')">×</span>
-    <div class="agent-detail-card">
-        <h3 id="agentName">مكتب ربيعة</h3>
-        <p>
-            مكتب ربيعة هو مكتب مسؤول عن **البطاقة الوقودية في غرب نينوى**. 
-            نسعى لتقديم أفضل الخدمات لزبائننا الكرام.
-        </p>
-        <p><strong>الخدمات التي يقدمها المكتب:</strong></p>
-        <table>
-            <thead>
-                <tr>
-                    <th>الخدمة</th>
-                    <th>الوصف</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>تعبئة البطاقات الوقودية (تبادل)</td>
-                    <td>تعبئة رصيد بطاقات الوقود لضمان استمرارية الخدمة.</td>
-                </tr>
-                <tr>
-                    <td>إصدار البطاقة الوقودية</td>
-                    <td>المساعدة في إجراءات إصدار بطاقات وقود جديدة.</td>
-                </tr>
-                <tr>
-                    <td>معالجة واستفسار عن البطاقة الوقودية</td>
-                    <td>تقديم الدعم الفني والإجابة على استفسارات المستخدمين وحل المشكلات المتعلقة بالبطاقات.</td>
-                </tr>
-            </tbody>
-        </table>
-        <p><strong>العنوان:</strong> نينوى - ربيعة - قرية العملة</p>
-        <p><strong>رقم الهاتف:</strong> 07518809908</p>
-        <div class="agent-contact-buttons">
-            <a href="tel:07518809908" class="phone-btn">
-                <i class="fas fa-phone-alt"></i> اتصل بالوكيل
-            </a>
-            <a href="https://wa.me/9647518809908" target="_blank" class="contact-btn">
-                <i class="fab fa-whatsapp"></i> اسأل الوكيل
-            </a>
-            <a href="https://maps.app.goo.gl/5538jZNsMT2YhJnE6" target="_blank" class="map-btn">
-                <i class="fas fa-map-marker-alt"></i> الموقع على الخريطة
-            </a>
-        </div>
-    </div>
-</div>
-
-<div id="mohamed-al-shehab-detail-page" class="agent-detail-page">
-    <span class="close-detail-btn" onclick="closeAgentDetail('mohamed-al-shehab')">×</span>
-    <div class="agent-detail-card">
-        <h3 id="agentName">مكتب محمد ال شهاب</h3>
-        <p>
-            مكتب محمد ال شهاب يقدم خدمات البطاقة الوقودية.
-        </p>
-        <p><strong>الخدمات التي يقدمها المكتب:</strong></p>
-        <table>
-            <thead>
-                <tr>
-                    <th>الخدمة</th>
-                    <th>الوصف</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>تعبئة بطائق</td>
-                    <td>تعبئة رصيد البطاقات الوقودية.</td>
-                </tr>
-                <tr>
-                    <td>اصدار بطائق</td>
-                    <td>المساعدة في إصدار بطاقات وقود جديدة.</td>
-                </tr>
-            </tbody>
-        </table>
-        <p><strong>العنوان:</strong> JGWW+5FG, Qaraj, Erbil Governorate, Iraq</p>
-        <p><strong>رقم الهاتف:</strong> 07822448215</p>
-        <div class="agent-contact-buttons">
-            <a href="tel:07822448215" class="phone-btn">
-                <i class="fas fa-phone-alt"></i> اتصل بالوكيل
-            </a>
-            <a href="https://wa.me/9647822448215" target="_blank" class="contact-btn">
-                <i class="fab fa-whatsapp"></i> اسأل الوكيل
-            </a>
-            <a href="https://maps.app.goo.gl/HuBNUvSMrKikxz9p9" target="_blank" class="map-btn">
-                <i class="fas fa-map-marker-alt"></i> الموقع على الخريطة
-            </a>
-        </div>
-    </div>
-</div>
-
-<div id="aldhahabi-mobiles-detail-page" class="agent-detail-page">
-    <span class="close-detail-btn" onclick="closeAgentDetail('aldhahabi-mobiles')">×</span>
-    <div class="agent-detail-card">
-        <h3 id="agentName">مكتب الذهبي للموبايلات</h3>
-        <p>
-            مكتب الذهبي للموبايلات يقدم خدمات متنوعة تتعلق بالبطاقة الوقودية.
-        </p>
-        <p><strong>الخدمات التي يقدمها المكتب:</strong></p>
-        <table>
-            <thead>
-                <tr>
-                    <th>الخدمة</th>
-                    <th>الوصف</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>تسجيل السيارة</td>
-                    <td>المساعدة في تسجيل معلومات السيارة للبطاقة الوقودية.</td>
-                </tr>
-                <tr>
-                    <td>تسليم البطاقة الوقودية من تبادل</td>
-                    <td>استلام البطاقات الوقودية الصادرة من شركة تبادل.</td>
-                </tr>
-                <tr>
-                    <td>شحن بطاقة تبادل</td>
-                    <td>تعبئة رصيد البطاقات الوقودية.</td>
-                </tr>
-                <tr>
-                    <td>حل جميع المشاكل</td>
-                    <td>تقديم الدعم الفني وحل المشكلات المتعلقة بالبطاقة.</td>
-                </tr>
-            </tbody>
-        </table>
-        <p><strong>العنوان:</strong> سايدين البكر مقابل نادي نينوى الرياضي</p>
-        <p><strong>رقم الهاتف:</strong> 07718747888</p>
-        <div class="agent-contact-buttons">
-            <a href="tel:07718747888" class="phone-btn">
-                <i class="fas fa-phone-alt"></i> اتصل بالوكيل
-            </a>
-            <a href="https://wa.me/9647718747888" target="_blank" class="contact-btn">
-                <i class="fab fa-whatsapp"></i> اسأل الوكيل
-            </a>
-            <a href="https://maps.app.goo.gl/f19cGJfpcWagWkfY8" target="_blank" class="map-btn">
-                <i class="fas fa-map-marker-alt"></i> الموقع على الخريطة
-            </a>
-        </div>
-    </div>
-</div>
-
-<div id="almokhtar-detail-page" class="agent-detail-page">
-    <span class="close-detail-btn" onclick="closeAgentDetail('almokhtar')">×</span>
-    <div class="agent-detail-card">
-        <h3 id="agentName">مكتب المختار</h3>
-        <p>
-            مكتب المختار يقدم خدمات شحن وإصدار البطاقات.
-        </p>
-        <p><strong>الخدمات التي يقدمها المكتب:</strong></p>
-        <table>
-            <thead>
-                <tr>
-                    <th>الخدمة</th>
-                    <th>الوصف</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>شحن اصدار البطاقات</td>
-                    <td>شحن وإصدار البطاقات الوقودية.</td>
-                </tr>
-            </tbody>
-        </table>
-        <p><strong>العنوان:</strong> نينوى - ناحية زمار</p>
-        <p><strong>رقم الهاتف:</strong> 07510598340</p>
-        <div class="agent-contact-buttons">
-            <a href="tel:07510598340" class="phone-btn">
-                <i class="fas fa-phone-alt"></i> اتصل بالوكيل
-            </a>
-            <a href="https://wa.me/9647510598340" target="_blank" class="contact-btn">
-                <i class="fab fa-whatsapp"></i> اسأل الوكيل
-            </a>
-            <a href="https://maps.app.goo.gl/DbzrJnAMqRf8GoMf7?gst=ac" target="_blank" class="map-btn">
-                <i class="fas fa-map-marker-alt"></i> الموقع على الخريطة
-            </a>
-        </div>
-    </div>
-</div>
-
-<div id="alwesam-services-detail-page" class="agent-detail-page">
-    <span class="close-detail-btn" onclick="closeAgentDetail('alwesam-services')">×</span>
-    <div class="agent-detail-card">
-        <h3 id="agentName">مكتب الوسام للخدمات الالكترونية</h3>
-        <p>
-            مكتب الوسام للخدمات الالكترونية يقدم مجموعة شاملة من الخدمات المتعلقة بالبطاقة الوقودية.
-        </p>
-        <p><strong>الخدمات التي يقدمها المكتب:</strong></p>
-        <table>
-            <thead>
-                <tr>
-                    <th>الخدمة</th>
-                    <th>الوصف</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>التسجيل على البطاقة الوقودية</td>
-                    <td>المساعدة في إجراءات التسجيل للحصول على البطاقة.</td>
-                </tr>
-                <tr>
-                    <td>تحديث البطاقة الوقودية</td>
-                    <td>تحديث بيانات البطاقة ومعلوماتها.</td>
-                </tr>
-                <tr>
-                    <td>حل مشكلة تؤقف البطاقة الوقودية</td>
-                    <td>تقديم الدعم لحل أي مشاكل تمنع عمل البطاقة.</td>
-                </tr>
-                <tr>
-                    <td>تفعيل بطاقة الوقودية (تبادل)</td>
-                    <td>المساعدة في تفعيل البطاقات الصادرة من تبادل.</td>
-                </tr>
-                <tr>
-                    <td>اصدار البطاقة الوقودية</td>
-                    <td>إصدار بطاقات وقود جديدة.</td>
-                </tr>
-            </tbody>
-        </table>
-        <p><strong>العنوان:</strong> موصل يارمجة الشمالية قرب جامع نداء الرحمن</p>
-        <p><strong>رقم الهاتف:</strong> 07510029007</p>
-        <div class="agent-contact-buttons">
-            <a href="tel:07510029007" class="phone-btn">
-                <i class="fas fa-phone-alt"></i> اتصل بالوكيل
-            </a>
-            <a href="https://wa.me/9647510029007" target="_blank" class="contact-btn">
-                <i class="fab fa-whatsapp"></i> اسأل الوكيل
-            </a>
-            <a href="https://maps.app.goo.gl/rskPG7KzvPdq6tQUA" target="_blank" class="map-btn">
-                <i class="fas fa-map-marker-alt"></i> الموقع على الخريطة
-            </a>
-        </div>
-    </div>
-</div>
-
-<div id="larsen-detail-page" class="agent-detail-page">
-    <span class="close-detail-btn" onclick="closeAgentDetail('larsen')">×</span>
-    <div class="agent-detail-card">
-        <h3 id="agentName">لارسن</h3>
-        <p>
-            مكتب لارسن يقدم جميع خدمات تبادل.
-        </p>
-        <p><strong>الخدمات التي يقدمها المكتب:</strong></p>
-        <table>
-            <thead>
-                <tr>
-                    <th>الخدمة</th>
-                    <th>الوصف</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>كل خدمات تبادل</td>
-                    <td>يشمل ذلك تعبئة، إصدار، وتحديث البطاقات الوقودية، وحل المشاكل المتعلقة بها.</td>
-                </tr>
-            </tbody>
-        </table>
-        <p><strong>العنوان:</strong> حمدانية كرمليس</p>
-        <p><strong>رقم الهاتف:</strong> 7734070266</p>
-        <div class="agent-contact-buttons">
-            <a href="tel:7734070266" class="phone-btn">
-                <i class="fas fa-phone-alt"></i> اتصل بالوكيل
-            </a>
-            <a href="https://wa.me/9647734070266" target="_blank" class="contact-btn">
-                <i class="fab fa-whatsapp"></i> اسأل الوكيل
-            </a>
-            <a href="https://maps.app.goo.gl/89r8LH68mYMRdQ877" target="_blank" class="map-btn">
-                <i class="fas fa-map-marker-alt"></i> الموقع على الخريطة
-            </a>
-        </div>
-    </div>
-</div>
-
-
-<footer>
-  © 2025 اسأل وكيلك - جميع الحقوق محفوظة
-</footer>
-
-<nav class="bottom-nav">
-  <a class="nav-item active" onclick="showPage('faq-page', this)">
-    <i class="fas fa-question-circle"></i>
-    <span class="nav-text">الأسئلة الشائعة</span>
-  </a>
-  <a class="nav-item" onclick="showPage('agents-page', this)">
-    <i class="fas fa-user-tie"></i>
-    <span class="nav-text">الوكلاء</span>
-  </a>
-</nav>
-
-<div id="agentModal" class="modal">
-  <div class="modal-content">
-    <span class="close-btn" onclick="closeForm('agentModal')">×</span>
-    <div class="agent-form-header">طلب إضافة في الموقع</div>
-    <div class="agent-form">
-      <input type="text" id="officeName" placeholder="اسم المكتب" required>
-      <input type="text" id="officeAddress" placeholder="عنوان المكتب" required>
-      <input type="tel" id="officePhone" placeholder="رقم هاتف المكتب" required>
-      <input type="url" id="officeMapLink" placeholder="رابط موقعك على خرائط جوجل (مثال: https://maps.app.goo.gl/HuBNUvSMrKikxz9p9)" required>
-      <p class="agent-form-note" style="font-size: 12px; text-align: right; color: #666; margin-bottom: 15px;">
-        للحصول على رابط الخريطة: ابحث عن موقع مكتبك على خرائط جوجل، ثم اضغط على "مشاركة" وانسخ الرابط المختصر أو الطويل.
-      </p>
-      <textarea id="officeServices" placeholder="الخدمات التي يقدمها مكتبك (مثال: تعبئة بطاقات، إصدار بطاقات، استفسارات...)" rows="4" required></textarea>
-      <button type="button" onclick="submitAgentForm()">تقديم الطلب</button>
-      <p class="agent-form-note">
-        ملاحظة: بعد إرسال المعلومات سيتم إضافة مكتبك بعد الموافقة من قبل الإدارة.
-      </p>
-    </div>
-  </div>
-</div>
-
-<div id="messageModal" class="modal">
-  <div class="modal-content">
-    <span class="close-btn" onclick="closeForm('messageModal')">×</span>
-    <div id="messageIconContainer">
-        
-</div>
-    <h3 id="messageTitle" style="color: #00b4d8; font-size: 24px;"></h3>
-    <p id="messageText"></p>
-  </div>
-</div>
-
-<script>
-  // Script for FAQ sections
-  function toggleAnswer(box) {
-    box.classList.toggle("open");
-  }
-
-  // Script for single-page navigation
-  function showPage(pageId, clickedLink) {
-    var contentSections = document.getElementsByClassName('content-section');
-    for (var i = 0; i < contentSections.length; i++) {
-      contentSections[i].style.display = 'none';
-    }
-    document.getElementById(pageId).style.display = 'block';
-
-    var sidebarLinks = document.querySelectorAll('.bottom-nav .nav-item');
-    for (var i = 0; i < sidebarLinks.length; i++) {
-      sidebarLinks[i].classList.remove('active');
-    }
-    clickedLink.classList.add('active');
-
-    // تحديث عنوان الصفحة في Header بناءً على الصفحة النشطة
-    if (pageId === 'faq-page') {
-      document.getElementById('main-header').textContent = 'اسأل وكيلك - الأسئلة الشائعة';
-    } else if (pageId === 'agents-page') {
-      document.getElementById('main-header').textContent = 'اسأل وكيلك - الوكلاء';
-    }
-    
-    // إخفاء أي صفحة تفاصيل وكيل عند التنقل بين الصفحات الرئيسية
-    var agentDetailPages = document.getElementsByClassName('agent-detail-page');
-    for (var i = 0; i < agentDetailPages.length; i++) {
-        agentDetailPages[i].style.display = 'none';
-    }
-  }
-
-  // Function to open a specific modal
-  function openForm(modalId) {
-    document.getElementById(modalId).style.display = "block";
-  }
-
-  // Function to close a specific modal
-  function closeForm(modalId) {
-    document.getElementById(modalId).style.display = "none";
-  }
-  
-  // Close the modal if the user clicks anywhere outside of it
-  window.onclick = function(event) {
-    var agentModal = document.getElementById("agentModal");
-    var messageModal = document.getElementById("messageModal");
-    if (event.target == agentModal) {
-      agentModal.style.display = "none";
-    }
-    if (event.target == messageModal) {
-      messageModal.style.display = "none";
-    }
-    // Updated to include all new agent detail pages
-    var agentDetailPages = document.getElementsByClassName('agent-detail-page');
-    for (var i = 0; i < agentDetailPages.length; i++) {
-        if (event.target == agentDetailPages[i]) {
-            agentDetailPages[i].style.display = "none";
-        }
-    }
-  }
-
-  // NEW: Unified function to show success/error messages
-  function showMessageModal(isSuccess, title, message) {
-      const messageModal = document.getElementById('messageModal');
-      const messageTitle = document.getElementById('messageTitle');
-      const messageText = document.getElementById('messageText');
-      const messageIconContainer = document.getElementById('messageIconContainer');
-
-      // Clear previous icon and classes
-      messageIconContainer.innerHTML = '';
-      messageModal.classList.remove('success', 'error');
-
-      messageTitle.textContent = title;
-      messageText.textContent = message;
-
-      if (isSuccess) {
-          messageModal.classList.add('success');
-          messageModal.querySelector('.modal-content').style.setProperty('--modal-fill-color', '#00b4d8');
-          messageModal.querySelector('.modal-content').style.borderColor = '#00b4d8';
-          messageModal.querySelector('.modal-content').style.backgroundColor = '#e9f5f9';
-          messageTitle.style.color = '#00b4d8';
-          // Success SVG
-          messageIconContainer.innerHTML = `
-            <svg class="modal-icon checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"></circle>
-                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"></path>
-            </svg>
-          `;
-      } else {
-          messageModal.classList.add('error');
-          messageModal.querySelector('.modal-content').style.setProperty('--modal-fill-color', '#dc3545');
-          messageModal.querySelector('.modal-content').style.borderColor = '#dc3545';
-          messageModal.querySelector('.modal-content').style.backgroundColor = '#ffebe6';
-          messageTitle.style.color = '#dc3545';
-          // Error SVG (an X mark)
-          messageIconContainer.innerHTML = `
-            <svg class="modal-icon error" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                <circle class="error__circle" cx="26" cy="26" r="25" fill="none" stroke="#dc3545"></circle>
-                <path class="error__line error__line--first" fill="none" stroke="#dc3545" d="M16 16 36 36"></path>
-                <path class="error__line error__line--second" fill="none" stroke="#dc3545" d="M36 16 16 36"></path>
-            </svg>
-          `;
-      }
-
-      messageModal.style.display = 'block';
-      setTimeout(() => {
-        messageModal.style.display = 'none';
-      }, 5000); // تختفي بعد 5 ثوانٍ
-  }
-
-  // Function to automatically submit the new agent form to Telegram bot
-  async function submitAgentForm() {
-    var officeName = document.getElementById('officeName').value;
-    var officeAddress = document.getElementById('officeAddress').value;
-    var officePhone = document.getElementById('officePhone').value;
-    var officeMapLink = document.getElementById('officeMapLink').value; 
-    var officeServices = document.getElementById('officeServices').value; 
-
-    if (officeName.trim() === '' || officeAddress.trim() === '' || officePhone.trim() === '' || officeMapLink.trim() === '' || officeServices.trim() === '') {
-        showMessageModal(false, 'خطأ', 'الرجاء تعبئة جميع الحقول المطلوبة.');
-        return;
-    }
-    
-    const botToken = '7594757892:AAE1Zo81jlb3MZNeZdQ71_a0xtcHdCztCfU';
-    const chatId = '5597396937';
-    
-    const messageText = `*طلب وكالة جديد*\n\n*اسم المكتب:* ${officeName}\n*عنوان المكتب:* ${officeAddress}\n*رقم الهاتف:* ${officePhone}\n*رابط الخريطة:* ${officeMapLink}\n*الخدمات المقدمة:* ${officeServices}`;
-    
-    const telegramApiUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(messageText)}&parse_mode=Markdown`;
-
-    try {
-      const response = await fetch(telegramApiUrl);
-      const data = await response.json();
-
-      if (data.ok) {
-        showMessageModal(true, 'تم الإرسال بنجاح!', 'سيتم التواصل معك بعد مراجعة الطلب من قبل الإدارة.');
-      } else {
-        showMessageModal(false, 'خطأ في الإرسال', 'حدث خطأ أثناء إرسال الطلب. يرجى المحاولة مرة أخرى.');
-        console.error('Telegram API Error:', data.description);
-      }
-    } catch (error) {
-      showMessageModal(false, 'خطأ في الاتصال', 'حدث خطأ في الاتصال بالإنترنت. يرجى التحقق من اتصالك.');
-      console.error('Fetch Error:', error);
-    }
-    
-    closeForm('agentModal');
-    
-    // Reset form fields
-    document.getElementById('officeName').value = '';
-    document.getElementById('officeAddress').value = '';
-    document.getElementById('officePhone').value = '';
-    document.getElementById('officeMapLink').value = ''; 
-    document.getElementById('officeServices').value = ''; 
-  }
-  
-  // Function to open the agent detail page
-  function openAgentDetail(agentId) {
-    document.getElementById(agentId + '-detail-page').style.display = 'block';
-  }
-  
-  // Function to close the agent detail page
-  function closeAgentDetail(agentId) {
-    document.getElementById(agentId + '-detail-page').style.display = 'none';
-  }
-
-  // Function to find the nearest agent using geolocation
-  function findNearestAgent() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const latitude = position.coords.latitude;
-          const longitude = position.coords.longitude;
-          // Updated Google Maps URL for current location and search for "وكيل تبادل"
-          const googleMapsUrl = `http://googleusercontent.com/maps.google.com/search/%D9%88%D9%83%D9%8A%D9%84+%D8%AA%D8%A8%D8%A7%D8%AF%D9%84/@${latitude},${longitude},12z`;
-          window.open(googleMapsUrl, '_blank');
-          showMessageModal(true, 'فتح الخريطة', 'جارٍ فتح خرائط جوجل لعرض أقرب الوكلاء.');
-        },
-        (error) => {
-          console.error("Geolocation error:", error);
-          let errorMessage = 'تعذر تحديد موقعك. يرجى التأكد من تفعيل خدمات الموقع والسماح للمتصفح بالوصول إليه.';
-          switch(error.code) {
-            case error.PERMISSION_DENIED:
-              errorMessage = "تم رفض طلب الوصول إلى الموقع الجغرافي. يرجى السماح للمتصفح بالوصول إلى موقعك.";
-              break;
-            case error.POSITION_UNAVAILABLE:
-              errorMessage = "معلومات الموقع الجغرافي غير متوفرة.";
-              break;
-            case error.TIMEOUT:
-              errorMessage = "انتهت مهلة طلب تحديد الموقع الجغرافي.";
-              break;
-            case error.UNKNOWN_ERROR:
-              errorMessage = "حدث خطأ غير معروف أثناء تحديد الموقع الجغرافي.";
-              break;
-          }
-          showMessageModal(false, 'خطأ في تحديد الموقع', errorMessage);
-        },
-        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 } // زيادة المهلة لتحسين الدقة
-      );
-    } else {
-      showMessageModal(false, 'خطأ', 'متصفحك لا يدعم تحديد الموقع الجغرافي.');
-    }
-  }
-  
-  // Show the FAQ page by default when the page loads
-  document.addEventListener('DOMContentLoaded', function() {
-    showPage('faq-page', document.querySelector('.bottom-nav .nav-item:first-of-type'));
-  });
-</script>
-
-</body>
-</html>
